@@ -4,7 +4,7 @@ import { getSettings } from './storage';
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 // Free multimodal-capable models on OpenRouter
-const DEFAULT_MODEL = 'google/gemini-2.0-flash-exp:free';
+const DEFAULT_MODEL = 'openrouter/free';
 
 async function callOpenRouter(
   messages: any[],
