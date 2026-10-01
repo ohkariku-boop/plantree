@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
   <circle cx="50" cy="50" r="48" fill="#4a7c59"/>
-  <path d="M50 20 C40 40 30 55 50 80 C70 55 60 40 50 20 Z" fill="#e8efe6"/>
-  <path d="M50 35 C45 45 42 55 50 70 C58 55 55 45 50 35 Z" fill="#aec9a6"/>
-  <circle cx="50" cy="28" r="4" fill="#32533c"/>
+  <!-- White leaf (Lucide-style) -->
+  <path d="M50 18C38 32 28 48 50 82C72 48 62 32 50 18Z" fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M50 42V72" stroke="#4a7c59" stroke-width="3.5" stroke-linecap="round"/>
 </svg>
