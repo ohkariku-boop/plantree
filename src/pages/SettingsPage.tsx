@@ -86,7 +86,7 @@ export default function SettingsPage() {
             onChange={e => setSettings({ ...settings, preferredModel: e.target.value || undefined })}
             className="w-full px-4 py-2.5 rounded-xl border border-sage-200 bg-white text-sm"
           >
-            <option value="">Default (auto free vision model)</option>
+            <option value="">Default (Gemma 4 31B free)</option>
             <option value="google/gemma-4-31b-it:free">Gemma 4 31B (free, vision)</option>
             <option value="google/gemma-4-26b-a4b-it:free">Gemma 4 26B (free, vision)</option>
             <option value="qwen/qwen3.8-27b:free">Qwen3.8 27B (free, vision)</option>

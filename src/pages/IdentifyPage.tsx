@@ -173,21 +173,37 @@ export default function IdentifyPage() {
               <p className="text-sm text-sage-700">{result.description}</p>
             )}
 
+            {result.commonNames && result.commonNames.length > 0 && (
+              <p className="text-sm text-sage-600">
+                Also known as: {result.commonNames.join(', ')}
+              </p>
+            )}
+
             {result.care && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <CareItem label="Light" value={result.care.light} />
-                <CareItem label="Water" value={result.care.water} />
-                {result.care.humidity && <CareItem label="Humidity" value={result.care.humidity} />}
-                {result.care.soil && <CareItem label="Soil" value={result.care.soil} />}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-sage-800">Care guide</h3>
+                <div className="grid grid-cols-1 gap-3 text-sm">
+                  <CareItem label="Light" value={result.care.light} />
+                  <CareItem label="Water" value={result.care.water} />
+                  {result.care.humidity && <CareItem label="Humidity" value={result.care.humidity} />}
+                  {result.care.soil && <CareItem label="Soil" value={result.care.soil} />}
+                  {result.care.temperature && <CareItem label="Temperature" value={result.care.temperature} />}
+                  {result.care.fertilizing && <CareItem label="Feeding" value={result.care.fertilizing} />}
+                  {result.care.pruning && <CareItem label="Pruning" value={result.care.pruning} />}
+                  {result.care.repotting && <CareItem label="Repotting" value={result.care.repotting} />}
+                </div>
               </div>
             )}
 
             {result.care?.tips && result.care.tips.length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold text-sage-700 mb-1">Tips</h3>
-                <ul className="text-sm text-sage-600 space-y-1">
+              <div className="rounded-xl bg-sage-50 border border-sage-100 p-4">
+                <h3 className="text-sm font-semibold text-sage-800 mb-2">Extra tips</h3>
+                <ul className="text-sm text-sage-700 space-y-1.5">
                   {result.care.tips.map((t, i) => (
-                    <li key={i}>• {t}</li>
+                    <li key={i} className="flex gap-2">
+                      <span className="text-sage-500">•</span>
+                      <span>{t}</span>
+                    </li>
                   ))}
                 </ul>
               </div>

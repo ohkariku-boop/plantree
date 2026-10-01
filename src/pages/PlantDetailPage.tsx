@@ -100,6 +100,7 @@ export default function PlantDetailPage() {
             <CareRow label="Water" value={plant.care.water} />
             {plant.care.humidity && <CareRow label="Humidity" value={plant.care.humidity} />}
             {plant.care.soil && <CareRow label="Soil" value={plant.care.soil} />}
+            {plant.care.temperature && <CareRow label="Temperature" value={plant.care.temperature} />}
             {plant.care.fertilizing && <CareRow label="Feeding" value={plant.care.fertilizing} />}
             {plant.care.pruning && <CareRow label="Pruning" value={plant.care.pruning} />}
             {plant.care.repotting && <CareRow label="Repotting" value={plant.care.repotting} />}
