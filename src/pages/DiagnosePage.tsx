@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { Stethoscope, Loader2, AlertTriangle } from 'lucide-react'
 import { diagnosePlant } from '../lib/ai'
 import { DiagnosisResult } from '../types'
@@ -33,7 +34,12 @@ export default function DiagnosePage() {
       const res = await diagnosePlant(preview, plantHint || undefined)
       setResult(res)
     } catch (e: any) {
-      setError(e.message || 'Something went wrong. Check your OpenRouter key in Settings.')
+      const msg = e.message || 'Something went wrong.'
+      if (msg.includes('401') || msg.includes('User not found') || msg.includes('Invalid OpenRouter')) {
+        setError('Invalid or expired OpenRouter key. Go to Settings, paste your new key, and Save.')
+      } else {
+        setError(msg)
+      }
     } finally {
       setLoading(false)
     }
@@ -121,8 +127,11 @@ export default function DiagnosePage() {
       )}
 
       {error && (
-        <div className="rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-4">
-          {error}
+        <div className="rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-4 space-y-2">
+          <p>{error}</p>
+          <Link to="/settings" className="inline-block font-medium underline underline-offset-2">
+            Open Settings →
+          </Link>
         </div>
       )}
 

@@ -35,6 +35,9 @@ async function callOpenRouter(
 
   if (!response.ok) {
     const err = await response.text();
+    if (response.status === 401) {
+      throw new Error("Invalid OpenRouter key (401). Go to Settings, paste your new key, and Save.");
+    }
     throw new Error(`OpenRouter error: ${response.status} – ${err}`);
   }
 

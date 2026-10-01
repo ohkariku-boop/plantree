@@ -1,16 +1,19 @@
 import { useState, useRef } from 'react'
-import { Camera, Upload, Loader2, Check, Plus } from 'lucide-react'
+import { Camera, Upload, Loader2, Check, Plus, Leaf } from 'lucide-react'
 import { identifyPlant } from '../lib/ai'
 import { addPlant } from '../lib/storage'
 import { IdentificationResult } from '../types'
 import { v4 as uuidv4 } from 'uuid'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function IdentifyPage() {
   const [preview, setPreview] = useState<string | null>(null)
   const [result, setResult] = useState<IdentificationResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [plantName, setPlantName] = useState('')
+  const [saved, setSaved] = useState(false)
+  const [savedId, setSavedId] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
@@ -24,6 +27,9 @@ export default function IdentifyPage() {
       setPreview(reader.result as string)
       setResult(null)
       setError(null)
+      setSaved(false)
+      setSavedId(null)
+      setPlantName('')
     }
     reader.readAsDataURL(file)
   }
@@ -35,8 +41,14 @@ export default function IdentifyPage() {
     try {
       const res = await identifyPlant(preview)
       setResult(res)
+      setPlantName(res.name || '')
     } catch (e: any) {
-      setError(e.message || 'Something went wrong. Check your OpenRouter key in Settings.')
+      const msg = e.message || 'Something went wrong.'
+      if (msg.includes('401') || msg.includes('User not found')) {
+        setError('Invalid or expired OpenRouter key. Go to Settings, paste your new key, and Save.')
+      } else {
+        setError(msg + ' — Check your OpenRouter key in Settings.')
+      }
     } finally {
       setLoading(false)
     }
@@ -44,9 +56,10 @@ export default function IdentifyPage() {
 
   const saveToCollection = () => {
     if (!result || !preview) return
+    const name = plantName.trim() || result.name || 'My plant'
     const plant = {
       id: uuidv4(),
-      name: result.name,
+      name,
       scientificName: result.scientificName,
       commonNames: result.commonNames,
       imageUrl: preview,
@@ -55,7 +68,8 @@ export default function IdentifyPage() {
       healthStatus: 'healthy' as const
     }
     addPlant(plant)
-    navigate(`/plants/${plant.id}`)
+    setSaved(true)
+    setSavedId(plant.id)
   }
 
   return (
@@ -74,13 +88,11 @@ export default function IdentifyPage() {
         >
           <Camera className="w-12 h-12 mx-auto text-sage-400 mb-3" />
           <p className="font-medium text-sage-700">Tap to take or choose a photo</p>
-          <p className="text-xs text-sage-500 mt-1">JPG, PNG, WebP • best with good light</p>
+          <p className="text-xs text-sage-500 mt-1">Camera or Photo Library • best with good light</p>
           <input
             ref={fileRef}
             type="file"
             accept="image/*"
-            className="hidden"
-            
             className="hidden"
             onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])}
           />
@@ -93,6 +105,7 @@ export default function IdentifyPage() {
               onClick={() => {
                 setPreview(null)
                 setResult(null)
+                setSaved(false)
               }}
               className="absolute top-3 right-3 bg-black/50 text-white text-xs px-3 py-1 rounded-full"
             >
@@ -123,8 +136,11 @@ export default function IdentifyPage() {
       )}
 
       {error && (
-        <div className="rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-4">
-          {error}
+        <div className="rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-4 space-y-2">
+          <p>{error}</p>
+          <Link to="/settings" className="inline-block font-medium underline underline-offset-2">
+            Open Settings →
+          </Link>
         </div>
       )}
 
@@ -132,16 +148,23 @@ export default function IdentifyPage() {
         <div className="rounded-2xl bg-white border border-sage-200 shadow-sm overflow-hidden">
           <div className="p-5 space-y-4">
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="text-xl font-bold text-sage-800">{result.name}</h2>
+              <div className="flex-1">
+                <label className="text-xs font-medium text-sage-500 uppercase tracking-wide">Plant name</label>
+                <input
+                  type="text"
+                  value={plantName}
+                  onChange={e => setPlantName(e.target.value)}
+                  className="mt-1 w-full text-xl font-bold text-sage-800 bg-transparent border-b border-sage-200 focus:border-sage-500 outline-none py-1"
+                  placeholder="Name this plant"
+                />
                 {result.scientificName && (
-                  <p className="text-sm italic text-sage-500">{result.scientificName}</p>
+                  <p className="text-sm italic text-sage-500 mt-1">{result.scientificName}</p>
                 )}
                 <p className="text-xs text-sage-500 mt-1">
                   Confidence: {Math.round((result.confidence || 0) * 100)}%
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-sage-100 flex items-center justify-center text-sage-600">
+              <div className="w-10 h-10 rounded-full bg-sage-100 flex items-center justify-center text-sage-600 flex-shrink-0">
                 <Check className="w-5 h-5" />
               </div>
             </div>
@@ -170,13 +193,29 @@ export default function IdentifyPage() {
               </div>
             )}
 
-            <button
-              onClick={saveToCollection}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-sage-500 text-white font-semibold hover:bg-sage-600 transition"
-            >
-              <Plus className="w-5 h-5" />
-              Add to My Plants
-            </button>
+            {saved ? (
+              <div className="space-y-2">
+                <div className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-100 text-emerald-800 font-semibold">
+                  <Check className="w-5 h-5" />
+                  Saved to My Plants
+                </div>
+                <button
+                  onClick={() => savedId && navigate(`/plants/${savedId}`)}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-sage-500 text-white font-semibold hover:bg-sage-600 transition"
+                >
+                  <Leaf className="w-5 h-5" />
+                  View plant
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={saveToCollection}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-sage-500 text-white font-semibold hover:bg-sage-600 transition shadow-sm"
+              >
+                <Plus className="w-5 h-5" />
+                Save plant
+              </button>
+            )}
           </div>
         </div>
       )}
