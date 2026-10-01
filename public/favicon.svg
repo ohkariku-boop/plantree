@@ -1,9 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Sage green background circle -->
-  <circle cx="50" cy="50" r="48" fill="#4a7c59"/>
-  <!-- White leaf matching Lucide style (scaled & centered) -->
-  <g transform="translate(18, 12) scale(2.7)">
-    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" fill="white"/>
-    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </g>
+  <circle cx="50" cy="50" r="50" fill="#4a7c59"/>
+  <!-- Clean white leaf matching the reference -->
+  <path d="M50 16
+           C36 28 28 42 28 55
+           C28 70 38 82 50 88
+           C62 82 72 70 72 55
+           C72 42 64 28 50 16Z" 
+        fill="white"/>
+  <!-- Center vein -->
+  <path d="M50 34 V78" 
+        stroke="#4a7c59" 
+        stroke-width="4.5" 
+        stroke-linecap="round"/>
+  <!-- Small stem tip -->
+  <path d="M50 78 Q48 86 50 90" 
+        stroke="#4a7c59" 
+        stroke-width="3.5" 
+        stroke-linecap="round" 
+        fill="none"/>
 </svg>
