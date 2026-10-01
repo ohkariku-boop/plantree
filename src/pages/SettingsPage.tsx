@@ -32,7 +32,7 @@ export default function SettingsPage() {
           <div className="flex-1">
             <h2 className="font-semibold text-sage-800">OpenRouter API Key</h2>
             <p className="text-sm text-sage-600 mt-0.5">
-              A key is already built-in. You can override it here if needed.
+              Completely free. Used only for plant identification and diagnosis.
             </p>
           </div>
         </div>

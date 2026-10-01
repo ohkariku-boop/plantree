@@ -6,15 +6,12 @@ const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 // Free multimodal-capable models on OpenRouter
 const DEFAULT_MODEL = 'google/gemini-2.0-flash-exp:free';
 
-// Hardcoded key for convenience (public repo risk accepted by owner)
-const HARDCODED_KEY = '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';
-
 async function callOpenRouter(
   messages: any[],
   model?: string
 ): Promise<string> {
   const settings = getSettings();
-  const apiKey = settings.openRouterApiKey || HARDCODED_KEY;
+  const apiKey = settings.openRouterApiKey;
 
   if (!apiKey) {
     throw new Error('Please add your free OpenRouter API key in Settings.');
