@@ -38,6 +38,9 @@ async function callOpenRouter(
     if (response.status === 401) {
       throw new Error("Invalid OpenRouter key (401). Go to Settings, paste your new key, and Save.");
     }
+    if (response.status === 429) {
+      throw new Error("Daily free limit reached (50 requests/day on OpenRouter free tier). It resets every day, or add $10 credits on openrouter.ai to unlock 1,000 free requests/day. We only use free models.");
+    }
     throw new Error(`OpenRouter error: ${response.status} – ${err}`);
   }
 

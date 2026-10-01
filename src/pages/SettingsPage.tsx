@@ -32,7 +32,7 @@ export default function SettingsPage() {
           <div className="flex-1">
             <h2 className="font-semibold text-sage-800">OpenRouter API Key</h2>
             <p className="text-sm text-sage-600 mt-0.5">
-              Completely free. Used only for plant identification and diagnosis.
+              Free models only. OpenRouter allows ~50 free requests per day (or 1,000/day after a one-time $10 credit).
             </p>
           </div>
         </div>
