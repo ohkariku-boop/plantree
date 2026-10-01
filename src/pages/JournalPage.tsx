@@ -99,8 +99,7 @@ export default function JournalPage() {
               ref={fileRef}
               type="file"
               accept="image/*"
-              capture="environment"
-              className="hidden"
+            className="hidden"
               onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])}
             />
           </div>
