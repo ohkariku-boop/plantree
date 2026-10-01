@@ -3,16 +3,18 @@ import { getSettings } from './storage';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
-// Free multimodal-capable models on OpenRouter (as of 2025/2026)
-// Users can change preferred model in settings
-const DEFAULT_MODEL = 'google/gemini-2.0-flash-exp:free'; // or 'meta-llama/llama-3.2-11b-vision-instruct:free' etc.
+// Free multimodal-capable models on OpenRouter
+const DEFAULT_MODEL = 'google/gemini-2.0-flash-exp:free';
+
+// Hardcoded key for convenience (public repo risk accepted by owner)
+const HARDCODED_KEY = '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';
 
 async function callOpenRouter(
   messages: any[],
   model?: string
 ): Promise<string> {
   const settings = getSettings();
-  const apiKey = settings.openRouterApiKey;
+  const apiKey = settings.openRouterApiKey || HARDCODED_KEY;
 
   if (!apiKey) {
     throw new Error('Please add your free OpenRouter API key in Settings.');
@@ -44,7 +46,6 @@ async function callOpenRouter(
 }
 
 function extractJSON(text: string): any {
-  // Try to find JSON block
   const match = text.match(/```(?:json)?\s*([\s\S]*?)```/) || text.match(/(\{[\s\S]*\})/);
   if (match) {
     try {
@@ -99,7 +100,6 @@ Be accurate. If unsure, lower confidence and list alternatives. Focus on housepl
 
   const parsed = extractJSON(content);
   if (!parsed || !parsed.name) {
-    // Fallback parse
     return {
       name: 'Unknown plant',
       confidence: 0.3,
